@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Retro Pong</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: monospace, system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .scoreboard {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      letter-spacing: 4px;
+    }
+    canvas {
+      background: #020617;
+      border: 3px solid #334155;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .hint {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    .badge {
+      background: #1e293b;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid #475569;
+    }
+  </style>
+</head>
+<body>
+  <div class="scoreboard">
+    <span id="p1">0</span>
+    <span style="color:#475569;">:</span>
+    <span id="p2">0</span>
+  </div>
+  <canvas id="pong" width="560" height="360"></canvas>
+  <div class="hint">
+    Use <span class="badge">W / S</span> or <span class="badge">↑ / ↓</span> to control your paddle. First to 7 wins!
+  </div>
+
+  <script>
+    const canvas = document.getElementById('pong');
+    const ctx = canvas.getContext('2d');
+    const p1El = document.getElementById('p1');
+    const p2El = document.getElementById('p2');
+
+    const PADDLE_WIDTH = 12;
+    const PADDLE_HEIGHT = 70;
+    const BALL_SIZE = 10;
+
+    let p1Y = (canvas.height - PADDLE_HEIGHT) / 2;
+    let p2Y = (canvas.height - PADDLE_HEIGHT) / 2;
+    let p1Score = 0;
+    let p2Score = 0;
+
+    let ballX = canvas.width / 2;
+    let ballY = canvas.height / 2;
+    let ballSpeedX = 5;
+    let ballSpeedY = 3;
+
+    let upPressed = false;
+    let downPressed = false;
+
+    function resetBall(servingToPlayer) {
+      ballX = canvas.width / 2;
+      ballY = canvas.height / 2;
+      ballSpeedX = servingToPlayer ? -4 : 4;
+      ballSpeedY = (Math.random() - 0.5) * 6;
+    }
+
+    function update() {
+      // Player movement
+      if (upPressed && p1Y > 0) p1Y -= 6;
+      if (downPressed && p1Y < canvas.height - PADDLE_HEIGHT) p1Y += 6;
+
+      // AI Paddle movement with smooth follow
+      const targetAI = ballY - PADDLE_HEIGHT / 2;
+      const aiSpeed = 4.2;
+      if (p2Y < targetAI - 5) p2Y += aiSpeed;
+      else if (p2Y > targetAI + 5) p2Y -= aiSpeed;
+      p2Y = Math.max(0, Math.min(canvas.height - PADDLE_HEIGHT, p2Y));
+
+      // Ball movement
+      ballX += ballSpeedX;
+      ballY += ballSpeedY;
+
+      // Top and bottom bounce
+      if (ballY <= 0 || ballY >= canvas.height - BALL_SIZE) {
+        ballSpeedY = -ballSpeedY;
+      }
+
+      // Player 1 collision
+      if (
+        ballX <= 20 + PADDLE_WIDTH &&
+        ballX + BALL_SIZE >= 20 &&
+        ballY + BALL_SIZE >= p1Y &&
+        ballY <= p1Y + PADDLE_HEIGHT
+      ) {
+        ballSpeedX = Math.abs(ballSpeedX) * 1.05; // speed up slightly
+        const hitOffset = (ballY + BALL_SIZE / 2) - (p1Y + PADDLE_HEIGHT / 2);
+        ballSpeedY = hitOffset * 0.18;
+      }
+
+      // Player 2 (AI) collision
+      if (
+        ballX + BALL_SIZE >= canvas.width - 20 - PADDLE_WIDTH &&
+        ballX <= canvas.width - 20 &&
+        ballY + BALL_SIZE >= p2Y &&
+        ballY <= p2Y + PADDLE_HEIGHT
+      ) {
+        ballSpeedX = -Math.abs(ballSpeedX) * 1.05;
+        const hitOffset = (ballY + BALL_SIZE / 2) - (p2Y + PADDLE_HEIGHT / 2);
+        ballSpeedY = hitOffset * 0.18;
+      }
+
+      // Scoring
+      if (ballX < 0) {
+        p2Score++;
+        p2El.textContent = p2Score;
+        resetBall(true);
+      } else if (ballX > canvas.width) {
+        p1Score++;
+        p1El.textContent = p1Score;
+        resetBall(false);
+      }
+
+      draw();
+      requestAnimationFrame(update);
+    }
+
+    function draw() {
+      // Clear
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Center dotted line
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 4;
+      ctx.setLineDash([8, 8]);
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, 0);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Paddles
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(20, p1Y, PADDLE_WIDTH, PADDLE_HEIGHT);
+
+      ctx.fillStyle = '#f43f5e';
+      ctx.fillRect(canvas.width - 20 - PADDLE_WIDTH, p2Y, PADDLE_WIDTH, PADDLE_HEIGHT);
+
+      // Ball
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(ballX, ballY, BALL_SIZE, BALL_SIZE);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowUp', 'w', 'W'].includes(e.key)) upPressed = true;
+      if (['ArrowDown', 's', 'S'].includes(e.key)) downPressed = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (['ArrowUp', 'w', 'W'].includes(e.key)) upPressed = false;
+      if (['ArrowDown', 's', 'S'].includes(e.key)) downPressed = false;
+    });
+
+    // Touch support
+    canvas.addEventListener('touchmove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const touchY = e.touches[0].clientY - rect.top;
+      p1Y = Math.max(0, Math.min(canvas.height - PADDLE_HEIGHT, touchY - PADDLE_HEIGHT / 2));
+      e.preventDefault();
+    }, { passive: false });
+
+    update();
+  </script>
+</body>
+</html>
