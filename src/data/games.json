@@ -9,8 +9,8 @@
     "rating": 4.9,
     "plays": 14200,
     "controls": "W A S D or Arrow Keys to change direction. Space to pause or restart.",
-    "iframeSrc": "/games/snake/index.html",
-    "iframeCode": "<iframe src=\"/games/snake/index.html\" title=\"Snake Classic\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
+    "iframeSrc": "./games/snake/index.html",
+    "iframeCode": "<iframe src=\"./games/snake/index.html\" title=\"Snake Classic\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
     "tags": ["Arcade", "Retro", "Snake", "Classic"]
   },
   {
@@ -23,8 +23,8 @@
     "rating": 4.8,
     "plays": 19850,
     "controls": "Arrow keys (Up, Down, Left, Right) or WASD to slide all tiles.",
-    "iframeSrc": "/games/2048/index.html",
-    "iframeCode": "<iframe src=\"/games/2048/index.html\" title=\"2048 Master\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
+    "iframeSrc": "./games/2048/index.html",
+    "iframeCode": "<iframe src=\"./games/2048/index.html\" title=\"2048 Master\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
     "tags": ["Puzzle", "Math", "2048", "Strategy"]
   },
   {
@@ -37,8 +37,8 @@
     "rating": 4.9,
     "plays": 25100,
     "controls": "Left / Right to move, Up to rotate, Down to soft drop, Space for instant hard drop.",
-    "iframeSrc": "/games/tetris/index.html",
-    "iframeCode": "<iframe src=\"/games/tetris/index.html\" title=\"Tetris Block\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
+    "iframeSrc": "./games/tetris/index.html",
+    "iframeCode": "<iframe src=\"./games/tetris/index.html\" title=\"Tetris Block\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
     "tags": ["Retro", "Arcade", "Blocks", "Classic"]
   },
   {
@@ -51,8 +51,8 @@
     "rating": 4.7,
     "plays": 31400,
     "controls": "Spacebar or Left Click / Tap to flap upward.",
-    "iframeSrc": "/games/flappy/index.html",
-    "iframeCode": "<iframe src=\"/games/flappy/index.html\" title=\"Flappy Bird\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
+    "iframeSrc": "./games/flappy/index.html",
+    "iframeCode": "<iframe src=\"./games/flappy/index.html\" title=\"Flappy Bird\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
     "tags": ["Action", "Arcade", "Skill", "Casual"]
   },
   {
@@ -65,8 +65,8 @@
     "rating": 4.8,
     "plays": 12600,
     "controls": "Left / Right Arrow or A / D to steer spaceship. Space to fire cannons.",
-    "iframeSrc": "/games/space-invaders/index.html",
-    "iframeCode": "<iframe src=\"/games/space-invaders/index.html\" title=\"Space Invaders\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
+    "iframeSrc": "./games/space-invaders/index.html",
+    "iframeCode": "<iframe src=\"./games/space-invaders/index.html\" title=\"Space Invaders\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
     "tags": ["Action", "Shooter", "Space", "Retro"]
   },
   {
@@ -79,8 +79,8 @@
     "rating": 4.6,
     "plays": 9400,
     "controls": "Move mouse or use Left / Right Arrow keys to guide the paddle.",
-    "iframeSrc": "/games/breakout/index.html",
-    "iframeCode": "<iframe src=\"/games/breakout/index.html\" title=\"Breakout Smash\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
+    "iframeSrc": "./games/breakout/index.html",
+    "iframeCode": "<iframe src=\"./games/breakout/index.html\" title=\"Breakout Smash\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
     "tags": ["Arcade", "Bricks", "Paddle", "Classic"]
   },
   {
@@ -93,8 +93,8 @@
     "rating": 4.7,
     "plays": 8700,
     "controls": "W / S keys or Up / Down arrows to slide your paddle vertically.",
-    "iframeSrc": "/games/pong/index.html",
-    "iframeCode": "<iframe src=\"/games/pong/index.html\" title=\"Retro Pong\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
+    "iframeSrc": "./games/pong/index.html",
+    "iframeCode": "<iframe src=\"./games/pong/index.html\" title=\"Retro Pong\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
     "tags": ["Retro", "Sports", "Table Tennis", "Classic"]
   },
   {
@@ -107,8 +107,8 @@
     "rating": 4.8,
     "plays": 16300,
     "controls": "Left click to uncover tile. Right click to flag a suspected mine.",
-    "iframeSrc": "/games/minesweeper/index.html",
-    "iframeCode": "<iframe src=\"/games/minesweeper/index.html\" title=\"Minesweeper\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
+    "iframeSrc": "./games/minesweeper/index.html",
+    "iframeCode": "<iframe src=\"./games/minesweeper/index.html\" title=\"Minesweeper\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
     "tags": ["Puzzle", "Minesweeper", "Logic", "Strategy"]
   },
   {
@@ -121,8 +121,8 @@
     "rating": 4.9,
     "plays": 22100,
     "controls": "Type on physical keyboard or click virtual keyboard letters. Enter to submit guess.",
-    "iframeSrc": "/games/wordle/index.html",
-    "iframeCode": "<iframe src=\"/games/wordle/index.html\" title=\"Word Guess\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
+    "iframeSrc": "./games/wordle/index.html",
+    "iframeCode": "<iframe src=\"./games/wordle/index.html\" title=\"Word Guess\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
     "tags": ["Puzzle", "Word", "Brain", "Trivia"]
   },
   {
@@ -135,8 +135,8 @@
     "rating": 4.5,
     "plays": 11200,
     "controls": "Click or tap any open square to mark your turn.",
-    "iframeSrc": "/games/tictactoe/index.html",
-    "iframeCode": "<iframe src=\"/games/tictactoe/index.html\" title=\"Tic Tac Toe\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
+    "iframeSrc": "./games/tictactoe/index.html",
+    "iframeCode": "<iframe src=\"./games/tictactoe/index.html\" title=\"Tic Tac Toe\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen allow=\"autoplay; fullscreen; keyboard\"></iframe>",
     "tags": ["Strategy", "Board", "Casual", "2-Player"]
   }
 ]

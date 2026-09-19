@@ -9,10 +9,411 @@
     <meta property="og:description" content="A lightweight unblocked games hub with games stored as iframes in a JSON database." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <!-- Main Sticky Navigation Header -->
+    <header class="site-header">
+      <div class="container">
+        <div class="nav-row">
+          <!-- Brand Logo Button -->
+          <button id="brand-btn" class="brand-btn" title="Back to Games Catalog">
+            <div class="brand-icon">🎮</div>
+            <div>
+              <div class="brand-title">
+                <span>UNBLOCKED</span>
+                <span class="brand-badge">GAMES</span>
+              </div>
+              <p class="brand-subtitle">JSON iFrame Hub</p>
+            </div>
+          </button>
+
+          <!-- Search Bar -->
+          <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="search-input"
+              class="search-input"
+              placeholder="Search games by title, tag, or category..."
+              autocomplete="off"
+            />
+            <button id="search-clear-btn" class="search-clear" title="Clear search">✕</button>
+          </div>
+
+          <!-- Actions Toolbar -->
+          <div class="nav-actions">
+            <button id="add-game-btn" class="btn btn-primary" title="Add custom game via iFrame">
+              <span>+</span>
+              <span>Add Game</span>
+            </button>
+            <button id="view-json-btn" class="btn btn-secondary" title="Inspect stored games JSON">
+              <span>&lt;/&gt;</span>
+              <span>JSON</span>
+            </button>
+            <button id="cloak-disguise-btn" class="btn btn-secondary" title="Disguise tab as Google Docs / Classroom">
+              <span>🛡️</span>
+              <span>Cloak</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Categories Filter Bar -->
+        <nav class="category-bar">
+          <button class="cat-pill active" data-cat="All">All Games</button>
+          <button class="cat-pill" data-cat="Arcade">Arcade</button>
+          <button class="cat-pill" data-cat="Puzzle">Puzzle</button>
+          <button class="cat-pill" data-cat="Retro">Retro</button>
+          <button class="cat-pill" data-cat="Action">Action</button>
+          <button class="cat-pill" data-cat="Strategy">Strategy</button>
+          <button class="cat-pill" data-cat="Favorites">
+            <span>❤️</span>
+            <span>Favorites</span>
+            <span id="fav-count-badge" class="fav-badge" style="display: none;">0</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main App Body -->
+    <main class="main-content">
+      <div class="container">
+        <!-- Catalog View -->
+        <section id="catalog-view">
+          <div class="catalog-header">
+            <div>
+              <h1 class="catalog-title">
+                <span id="catalog-title-text">All Games</span>
+                <span id="count-badge" class="count-badge">10 available</span>
+              </h1>
+              <p class="catalog-subtitle">
+                Each game runs in an embedded iFrame loaded directly from our JSON database.
+              </p>
+            </div>
+
+            <div class="sort-container">
+              <span>Sort by:</span>
+              <select id="sort-select" class="sort-select">
+                <option value="popular">Most Popular</option>
+                <option value="rating">Highest Rated</option>
+                <option value="az">Title (A-Z)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Games Grid -->
+          <div id="games-grid" class="games-grid">
+            <!-- Game cards injected dynamically via js/app.js -->
+          </div>
+
+          <!-- Empty State -->
+          <div id="empty-state" class="empty-state">
+            <div class="empty-state-icon">🎮</div>
+            <h3>No games found</h3>
+            <p id="empty-state-msg">
+              Try searching for a different keyword or reset your filters.
+            </p>
+          </div>
+        </section>
+
+        <!-- Player View -->
+        <section id="player-view">
+          <div class="player-nav">
+            <button id="player-back-btn" class="btn btn-secondary" title="Return to catalog">
+              <span>←</span>
+              <span>All Games</span>
+            </button>
+
+            <div class="player-title-box">
+              <span id="player-game-icon" class="player-title-icon">🎮</span>
+              <div>
+                <h2 class="player-heading">
+                  <span id="player-title-text">Game Title</span>
+                  <span id="player-cat-badge" class="card-badge">Category</span>
+                </h2>
+              </div>
+            </div>
+
+            <div class="player-toolbar">
+              <button id="player-fav-btn" class="tool-btn" title="Toggle Favorite">
+                🤍 Favorite
+              </button>
+              <button id="player-reload-btn" class="tool-btn" title="Reload Game iFrame">
+                🔄 Reload
+              </button>
+              <button id="theater-btn" class="tool-btn" title="Toggle Theater Mode">
+                📺 Theater
+              </button>
+              <button id="fullscreen-btn" class="tool-btn" title="Fullscreen">
+                ⛶ Fullscreen
+              </button>
+              <button id="unblock-tab-btn" class="tool-btn" title="Open in cloaked about:blank tab">
+                ↗ Unblock Tab
+              </button>
+            </div>
+          </div>
+
+          <!-- Stage Container -->
+          <div id="player-stage" class="player-stage">
+            <div id="player-spinner" class="player-spinner">
+              <div class="spinner-circle"></div>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Loading iFrame...</p>
+            </div>
+            <iframe
+              id="active-iframe"
+              src="about:blank"
+              allow="autoplay; fullscreen; keyboard; gamepad; clipboard-read; clipboard-write"
+              tabindex="0"
+            ></iframe>
+          </div>
+
+          <!-- Details & JSON Inspector Row -->
+          <div class="player-details-grid">
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+              <div class="info-card">
+                <div class="info-card-header">
+                  <h3 class="info-card-title">🎮 How to Play & Controls</h3>
+                </div>
+                <div id="player-controls-text" class="controls-box">
+                  Controls description...
+                </div>
+              </div>
+
+              <div class="info-card">
+                <div class="info-card-header">
+                  <h3 class="info-card-title">ℹ️ About Game</h3>
+                </div>
+                <p id="player-about-text" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+                  Game description...
+                </p>
+                <div id="player-tags-container" class="tags-row"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="info-card">
+                <div class="info-card-header">
+                  <h3 class="info-card-title">&lt;/&gt; JSON iFrame Record</h3>
+                  <button id="copy-snippet-btn" class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.72rem;">
+                    📋 Copy
+                  </button>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.65rem;">
+                  Stored in <code>games.json</code>:
+                </p>
+                <div id="player-iframe-snippet" class="json-code-box"></div>
+                <div style="margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center;">
+                  <span>Source URL:</span>
+                  <code id="player-source-url" style="color: var(--accent-cyan);">./games/...</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-content">
+          <div>
+            <strong>Unblocked Games Portal</strong> • All games stored as iFrames in <code>games.json</code>
+          </div>
+          <div class="footer-links">
+            <button id="footer-json-btn" class="footer-btn">View JSON Database</button>
+            <span>•</span>
+            <button id="footer-cloak-btn" class="footer-btn">Disguise Tab</button>
+            <span>•</span>
+            <span>No Ads • No Tracking • No AI</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ====================================================================
+         Modals
+         ==================================================================== -->
+
+    <!-- Add Game Modal -->
+    <div id="add-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <div class="modal-icon-badge" style="background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan);">+</div>
+            <div>
+              <h2>Add Game to JSON</h2>
+              <p>Store embeddable iFrame code into the local database</p>
+            </div>
+          </div>
+          <button class="close-modal-btn" data-close-modal="add-modal">✕</button>
+        </div>
+
+        <form id="add-game-form">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="new-title">Game Title *</label>
+              <input type="text" id="new-title" class="form-input" required placeholder="e.g., Pixel Adventure" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="new-category">Category</label>
+                <select id="new-category" class="form-select">
+                  <option value="Arcade">Arcade</option>
+                  <option value="Puzzle">Puzzle</option>
+                  <option value="Retro">Retro</option>
+                  <option value="Action">Action</option>
+                  <option value="Strategy">Strategy</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="new-emoji">Icon / Emoji</label>
+                <div style="display: flex; gap: 0.4rem;">
+                  <input type="text" id="new-emoji" class="form-input" value="🎮" style="width: 50px; text-align: center; font-size: 1.1rem;" />
+                  <div style="display: flex; gap: 0.25rem; align-items: center;">
+                    <button type="button" class="btn btn-secondary emoji-preset-btn" style="padding: 0.25rem 0.45rem;">🕹️</button>
+                    <button type="button" class="btn btn-secondary emoji-preset-btn" style="padding: 0.25rem 0.45rem;">🚀</button>
+                    <button type="button" class="btn btn-secondary emoji-preset-btn" style="padding: 0.25rem 0.45rem;">🏎️</button>
+                    <button type="button" class="btn btn-secondary emoji-preset-btn" style="padding: 0.25rem 0.45rem;">💎</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="new-iframe">iFrame Code or Web Game URL *</label>
+              <textarea
+                id="new-iframe"
+                class="form-textarea"
+                rows="3"
+                required
+                style="font-family: var(--font-mono); font-size: 0.78rem;"
+                placeholder='<iframe src="https://..." width="100%" height="100%"></iframe> or https://...'
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="new-desc">Description</label>
+              <textarea id="new-desc" class="form-textarea" rows="2" placeholder="Brief summary of gameplay..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="new-controls">Controls Instructions</label>
+              <input type="text" id="new-controls" class="form-input" placeholder="e.g., Arrow keys or WASD to move" />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-close-modal="add-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">+ Save to JSON</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- JSON Database Viewer Modal -->
+    <div id="json-modal" class="modal-overlay">
+      <div class="modal-content modal-content-lg">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <div class="modal-icon-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald);">&lt;/&gt;</div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <h2>games.json Database</h2>
+                <span id="json-count-badge" class="count-badge" style="color: var(--accent-cyan);">10 games stored</span>
+              </div>
+              <p>Each entry stores the game's embeddable iFrame code and metadata</p>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <button id="copy-json-btn" class="btn btn-secondary" style="font-size: 0.75rem;">📋 Copy JSON</button>
+            <button id="export-json-btn" class="btn btn-primary" style="font-size: 0.75rem;">⬇ Export</button>
+            <button class="close-modal-btn" data-close-modal="json-modal">✕</button>
+          </div>
+        </div>
+
+        <div style="padding: 0.65rem 1.5rem; background: rgba(5, 8, 16, 0.6); border-bottom: 1px solid var(--border-color); display: flex; justify-content: flex-end;">
+          <button id="reset-json-btn" class="footer-btn" style="font-size: 0.75rem; color: var(--accent-amber);">
+            ↺ Reset to default games
+          </button>
+        </div>
+
+        <div class="modal-body" style="background: #050810; padding: 1.25rem;">
+          <pre id="json-content-pre" style="font-family: var(--font-mono); font-size: 0.75rem; color: #6ee7b7; white-space: pre-wrap; line-height: 1.5;"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Cloak / Disguise Modal -->
+    <div id="cloak-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <div class="modal-icon-badge" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber);">🛡️</div>
+            <div>
+              <h2>Tab Cloak & Disguise</h2>
+              <p>Mask your browser tab title and favicon</p>
+            </div>
+          </div>
+          <button class="close-modal-btn" data-close-modal="cloak-modal">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <label style="font-size: 0.75rem; font-weight: 600; color: #cbd5e1;">Quick Disguise Presets</label>
+          <div class="preset-list">
+            <button class="preset-btn" data-preset="docs">
+              <div>
+                <div class="preset-name">Google Docs</div>
+                <div class="preset-title-preview">Untitled document - Google Docs</div>
+              </div>
+            </button>
+            <button class="preset-btn" data-preset="classroom">
+              <div>
+                <div class="preset-name">Google Classroom</div>
+                <div class="preset-title-preview">Classes</div>
+              </div>
+            </button>
+            <button class="preset-btn" data-preset="drive">
+              <div>
+                <div class="preset-name">Google Drive</div>
+                <div class="preset-title-preview">My Drive - Google Drive</div>
+              </div>
+            </button>
+            <button class="preset-btn" data-preset="canvas">
+              <div>
+                <div class="preset-name">Canvas LMS</div>
+                <div class="preset-title-preview">Dashboard</div>
+              </div>
+            </button>
+            <button class="preset-btn" data-preset="reset">
+              <div>
+                <div class="preset-name">Reset to Normal</div>
+                <div class="preset-title-preview">Unblocked Games</div>
+              </div>
+            </button>
+          </div>
+
+          <div style="margin-top: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color);">
+            <label style="font-size: 0.75rem; font-weight: 600; color: #cbd5e1; display: block; margin-bottom: 0.4rem;">
+              Custom Tab Title
+            </label>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" id="custom-title-input" class="form-input" placeholder="e.g., Biology Notes - Unit 3" />
+              <button type="button" id="apply-custom-title-btn" class="btn btn-secondary">Apply</button>
+            </div>
+          </div>
+
+          <div style="padding: 0.65rem 0.85rem; border-radius: 0.6rem; background: #050810; border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-muted);">
+            Tip: You can press <kbd style="background: #1e293b; padding: 0.15rem 0.4rem; border-radius: 4px; color: #fff;">Esc</kbd> anytime to return to the catalog.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Application Script Entry Point -->
+    <script type="module" src="./js/app.js"></script>
   </body>
 </html>
-
